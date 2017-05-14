@@ -1,38 +1,33 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
 //        Scanner scanner = new Scanner(new FileInputStream("1.txt"));
-        int tableCount = scanner.nextInt();
-        int requestCount = scanner.nextInt();
-        int[] sizes = new int[tableCount];
-        int[] pointers = new int[tableCount];
-        for (int i = 0; i < tableCount; i++) {
-            sizes[i] = scanner.nextInt();
-            pointers[i] = i;
+        int varsCount = scanner.nextInt();
+        int eqCount = scanner.nextInt();
+        int ineqCount = scanner.nextInt();
+        int[] parents = new int[varsCount];
+        for (int i = 0; i < varsCount; i++) {
+            parents[i] = i;
         }
-        int max = Arrays.stream(sizes).max().getAsInt();
-        DisjointSet set = new DisjointSet(pointers);
-        for (int i = 0; i < requestCount; i++) {
-            int destination = scanner.nextInt() - 1;
-            int source = scanner.nextInt() - 1;
-            int destOrigin = set.find(destination);
-            int sourceOrigin = set.find(source);
-            if(destOrigin == sourceOrigin) {
-                System.out.println(max);
-                continue;
+        DisjointSet set = new DisjointSet(parents);
+        for (int i = 0; i < eqCount; i++) {
+            int v1 = scanner.nextInt() - 1;
+            int v2 = scanner.nextInt() - 1;
+            set.union(v1, v2);
+        }
+        for (int i = 0; i < ineqCount; i++) {
+            int v1 = scanner.nextInt() - 1;
+            int v2 = scanner.nextInt() - 1;
+            if(set.find(v1) ==  set.find(v2)){
+                System.out.println(0);
+                return;
             }
-            sizes[destOrigin] += sizes[sourceOrigin];
-            sizes[sourceOrigin] = 0;
-            set.union(destOrigin, sourceOrigin);
-            max = max > sizes[destOrigin] ? max : sizes[destOrigin];
-            System.out.println(max);
-//            System.out.println("!");
         }
+        System.out.println(1);
 
     }
 
